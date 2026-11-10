@@ -12,6 +12,7 @@
     pending = {},
     lockReason,
     compact = false,
+    readOnly = false,
     onchange,
   } = $props();
 
@@ -48,6 +49,14 @@
   }
 </script>
 
+{#if readOnly}
+  <div class="ncgroup" class:compact>
+    <div class="ncmain"><span class="title">{$t("Noise Cancelling")}</span>
+      <span>{powerValue === null ? "—" : !powerChecked ? $t("Off") : $t(mode.options.find((o) => o.value === modeValue)?.label ?? "Unknown")}</span>
+    </div>
+    <p class="readonly-note">{$t("Use the O/L/H switch on the mobile receiver to change noise cancellation.")}</p>
+  </div>
+{:else}
 <div class="ncgroup" class:compact>
   <div class="ncmain" class:busy={!!pending[power.id]} title={powerLocked ? powerReason : null}>
     <div class="label">
@@ -122,7 +131,10 @@
   </div>
 </div>
 
+{/if}
+
 <style>
+  .readonly-note { font-size: 12px; color: var(--text-dim); line-height: 1.5; margin: 8px 0 0; }
   .ncgroup {
     padding: 10px 4px 13px;
     border-bottom: 1px solid var(--border);
